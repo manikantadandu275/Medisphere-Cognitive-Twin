@@ -1,0 +1,35 @@
+<div class="dashboard">
+
+  <h1>🏥 MediSphere</h1>
+  <h2>Patient 360 Dashboard</h2>
+
+  @if (patient360) {
+
+    <div class="card">
+      <h3>👤 Patient Information</h3>
+      <p><b>Name:</b> {{ patient360.digitalTwin.name }}</p>
+      <p><b>Age:</b> {{ patient360.digitalTwin.age }}</p>
+      <p><b>Gender:</b> {{ patient360.digitalTwin.gender }}</p>
+      <p><b>Blood Group:</b> {{ patient360.digitalTwin.bloodGroup }}</p>
+    </div>
+
+    <div class="card">
+      <h3>❤️ Wearable Health Data</h3>
+      <p><b>Heart Rate:</b> {{ patient360.wearableData.heartRate }} BPM</p>
+      <p><b>SpO₂:</b> {{ patient360.wearableData.spo2 }}%</p>
+      <p><b>Steps:</b> {{ patient360.wearableData.steps }}</p>
+      <p><b>Temperature:</b> {{ patient360.wearableData.temperature }} °C</p>
+    </div>
+
+    <div class="card">
+      <h3>🟢 Patient Status</h3>
+      <p>Patient is being monitored successfully.</p>
+    </div>
+
+  } @else {
+
+    <p>Loading patient information...</p>
+
+  }
+
+</div>
