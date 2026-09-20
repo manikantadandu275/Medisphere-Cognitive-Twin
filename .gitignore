@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Python virtual environments
+fl-env/
+tff-env/
+__pycache__/
+*.pyc

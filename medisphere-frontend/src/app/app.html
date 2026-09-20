@@ -3,28 +3,44 @@
   <h1>🏥 MediSphere</h1>
   <h2>Patient 360 Dashboard</h2>
 
-  @if (patient360) {
+  @if (patient360()) {
 
     <div class="card">
       <h3>👤 Patient Information</h3>
-      <p><b>Name:</b> {{ patient360.digitalTwin.name }}</p>
-      <p><b>Age:</b> {{ patient360.digitalTwin.age }}</p>
-      <p><b>Gender:</b> {{ patient360.digitalTwin.gender }}</p>
-      <p><b>Blood Group:</b> {{ patient360.digitalTwin.bloodGroup }}</p>
+      <p><b>Name:</b> {{ patient360().digitalTwin.name }}</p>
+      <p><b>Age:</b> {{ patient360().digitalTwin.age }}</p>
+      <p><b>Gender:</b> {{ patient360().digitalTwin.gender }}</p>
+      <p><b>Blood Group:</b> {{ patient360().digitalTwin.bloodGroup }}</p>
     </div>
 
     <div class="card">
       <h3>❤️ Wearable Health Data</h3>
-      <p><b>Heart Rate:</b> {{ patient360.wearableData.heartRate }} BPM</p>
-      <p><b>SpO₂:</b> {{ patient360.wearableData.spo2 }}%</p>
-      <p><b>Steps:</b> {{ patient360.wearableData.steps }}</p>
-      <p><b>Temperature:</b> {{ patient360.wearableData.temperature }} °C</p>
+      <p><b>Heart Rate:</b> {{ patient360().wearableData.heartRate }} BPM</p>
+      <p><b>SpO₂:</b> {{ patient360().wearableData.spo2 }}%</p>
+      <p><b>Steps:</b> {{ patient360().wearableData.steps }}</p>
+      <p><b>Temperature:</b> {{ patient360().wearableData.temperature }} °C</p>
     </div>
 
     <div class="card">
       <h3>🟢 Patient Status</h3>
       <p>Patient is being monitored successfully.</p>
     </div>
+
+    @if (cvdRisk()) {
+      <div class="card">
+        <h3>🫀 CVD AI Risk</h3>
+        <p><b>Risk:</b> {{ cvdRisk().risk }}</p>
+        <p><b>Risk Score:</b> {{ cvdRisk().risk_score }}</p>
+      </div>
+    }
+
+    @if (diabetesRisk()) {
+      <div class="card">
+        <h3>🩺 Diabetes AI Risk</h3>
+        <p><b>Risk:</b> {{ diabetesRisk().risk }}</p>
+        <p><b>Risk Score:</b> {{ diabetesRisk().risk_score }}</p>
+      </div>
+    }
 
   } @else {
 

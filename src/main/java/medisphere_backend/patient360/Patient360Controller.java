@@ -10,8 +10,7 @@ import medisphere_backend.wearable.WearableData;
 import medisphere_backend.wearable.WearableDataRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
-
+@CrossOrigin(origins = "http://localhost:50903")
 public class Patient360Controller {
 
     private final PatientDigitalTwinRepository digitalTwinRepository;
