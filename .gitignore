@@ -37,3 +37,8 @@ fl-env/
 tff-env/
 __pycache__/
 *.pyc
+
+# Presentations and scratch scripts
+*.pptx
+scratch_*.py
+

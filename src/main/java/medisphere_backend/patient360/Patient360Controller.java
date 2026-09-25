@@ -10,7 +10,10 @@ import medisphere_backend.wearable.WearableData;
 import medisphere_backend.wearable.WearableDataRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:50903")
+@CrossOrigin(origins = {
+        "http://localhost:4200",
+        "http://localhost:50903"
+})
 public class Patient360Controller {
 
     private final PatientDigitalTwinRepository digitalTwinRepository;
@@ -27,11 +30,15 @@ public class Patient360Controller {
     @GetMapping("/api/patient360")
     public Patient360Response getPatient360() {
 
-        PatientDigitalTwin twin =
-                digitalTwinRepository.findAll().get(0);
+        PatientDigitalTwin twin = digitalTwinRepository.findAll().stream().findFirst().orElseGet(() -> {
+            PatientDigitalTwin defaultTwin = new PatientDigitalTwin("P101", "John Doe", 58, "Male", "O+");
+            return digitalTwinRepository.save(defaultTwin);
+        });
 
-        WearableData wearable =
-                wearableDataRepository.findAll().get(0);
+        WearableData wearable = wearableDataRepository.findAll().stream().findFirst().orElseGet(() -> {
+            WearableData defaultWearable = new WearableData("P101", 145, 98, 4320, 36.7);
+            return wearableDataRepository.save(defaultWearable);
+        });
 
         return new Patient360Response(twin, wearable);
     }

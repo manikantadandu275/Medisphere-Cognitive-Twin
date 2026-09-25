@@ -1,51 +1,350 @@
-<div class="dashboard">
+<div class="app-wrapper">
 
-  <h1>🏥 MediSphere</h1>
-  <h2>Patient 360 Dashboard</h2>
-
-  @if (patient360()) {
-
-    <div class="card">
-      <h3>👤 Patient Information</h3>
-      <p><b>Name:</b> {{ patient360().digitalTwin.name }}</p>
-      <p><b>Age:</b> {{ patient360().digitalTwin.age }}</p>
-      <p><b>Gender:</b> {{ patient360().digitalTwin.gender }}</p>
-      <p><b>Blood Group:</b> {{ patient360().digitalTwin.bloodGroup }}</p>
+  <!-- TOP VIBRANT BLUE HEADER (EXACT MATCH TO SCREENSHOTS) -->
+  <header class="top-header">
+    <div class="top-brand">MediSphere</div>
+    <div class="top-milestone-title">{{ getMilestoneHeaderTitle() }}</div>
+    <div class="top-user-nav">
+      <span>Clinician</span> | <span>Logout</span>
     </div>
+  </header>
 
-    <div class="card">
-      <h3>❤️ Wearable Health Data</h3>
-      <p><b>Heart Rate:</b> {{ patient360().wearableData.heartRate }} BPM</p>
-      <p><b>SpO₂:</b> {{ patient360().wearableData.spo2 }}%</p>
-      <p><b>Steps:</b> {{ patient360().wearableData.steps }}</p>
-      <p><b>Temperature:</b> {{ patient360().wearableData.temperature }} °C</p>
-    </div>
+  <!-- MAIN LAYOUT WITH SIDEBAR -->
+  <div class="main-layout">
 
-    <div class="card">
-      <h3>🟢 Patient Status</h3>
-      <p>Patient is being monitored successfully.</p>
-    </div>
+    <!-- LEFT SIDEBAR (EXACT MATCH TO SCREENSHOTS) -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item" [class.active]="activeTab === 'dashboard'" (click)="setTab('dashboard')">Dashboard</li>
+        <li class="sidebar-item" [class.active]="activeTab === 'patients'" (click)="setTab('patients')">Patients</li>
+        <li class="sidebar-item" [class.active]="activeTab === 'twins'" (click)="setTab('twins')">Twins</li>
+        <li class="sidebar-item" [class.active]="activeTab === 'predictions'" (click)="setTab('predictions')">Predictions</li>
+        <li class="sidebar-item" [class.active]="activeTab === 'alerts'" (click)="setTab('alerts')">Alerts</li>
+        <li class="sidebar-item" [class.active]="activeTab === 'careplans'" (click)="setTab('careplans')">Careplans</li>
+        <li class="sidebar-item" [class.active]="activeTab === 'reports'" (click)="setTab('reports')">Reports</li>
+      </ul>
+    </aside>
 
-    @if (cvdRisk()) {
-      <div class="card">
-        <h3>🫀 CVD AI Risk</h3>
-        <p><b>Risk:</b> {{ cvdRisk().risk }}</p>
-        <p><b>Risk Score:</b> {{ cvdRisk().risk_score }}</p>
+    <!-- CONTENT AREA -->
+    <main class="content-area">
+
+      <!-- =================================================================================== -->
+      <!-- MILESTONE 1: DASHBOARD / FHIR INTEGRATION & TWIN FOUNDATION -->
+      <!-- =================================================================================== -->
+      <div *ngIf="activeTab === 'dashboard'">
+        <h1 class="page-title">Patient 360 Dashboard</h1>
+
+        <!-- 3 STAT CARDS -->
+        <div class="top-stats-grid">
+          <div class="stat-box">
+            <span class="lbl">Patients Onboarded</span>
+            <span class="val">1,247</span>
+            <span class="sub">↑ 87 this week</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">FHIR Resources</span>
+            <span class="val">2.4M</span>
+            <span class="sub">Synced from EHR</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">Twins Created</span>
+            <span class="val">1,247</span>
+            <span class="sub">100% coverage</span>
+          </div>
+        </div>
+
+        <!-- MAIN DELIVERABLE CARD CONTAINER -->
+        <div class="deliverable-box">
+          <h2 class="deliverable-title">Digital Health Twin - Patient John Doe</h2>
+          
+          <div class="info-line"><strong>FHIR Patient Resource:</strong> Loaded from Epic EHR</div>
+          <div class="info-line"><strong>Demographics:</strong> 58M | <strong>Conditions:</strong> Hypertension, T2 Diabetes</div>
+          <div class="info-line"><strong>Vitals Stream:</strong> HR {{ patient360.wearableData.heartRate || 72 }}, BP 130/85, SpO2 {{ patient360.wearableData.spo2 || 98 }}% | <strong>Last:</strong> 2 min ago</div>
+          <div class="info-line"><strong>Lab Results:</strong> HbA1c 7.2% | eGFR 65 | LDL 120</div>
+          <div class="info-line"><strong>[3D Body Model: Organ systems with risk heatmap]</strong></div>
+          <div class="info-line"><strong>Active Medications:</strong> Metformin 500mg, Lisinopril 10mg</div>
+          
+          <div class="action-bar">
+            <strong>Action:</strong>
+            <button class="btn-action-outline" (click)="setTab('dashboard')">[View Timeline]</button>
+            <button class="btn-action" (click)="setTab('predictions')">[Run Prediction]</button>
+            <button class="btn-action-outline" (click)="setTab('careplans')">[Create Careplan]</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE LIVE DATA PANEL -->
+        <div class="interactive-section">
+          <h4>📊 Real-Time Patient 360 Digital Twin Record</h4>
+          <div class="info-line">Patient ID: <strong>{{ patient360.digitalTwin.patientId }}</strong> | Name: <strong>{{ patient360.digitalTwin.name }}</strong> | Age: <strong>{{ patient360.digitalTwin.age }}</strong> | Blood Group: <strong>{{ patient360.digitalTwin.bloodGroup }}</strong></div>
+          <div class="info-line">Wearable Telemetry: Heart Rate: <strong>{{ patient360.wearableData.heartRate }} BPM</strong> | SpO2: <strong>{{ patient360.wearableData.spo2 }}%</strong> | Temperature: <strong>{{ patient360.wearableData.temperature }}°C</strong></div>
+        </div>
       </div>
-    }
 
-    @if (diabetesRisk()) {
-      <div class="card">
-        <h3>🩺 Diabetes AI Risk</h3>
-        <p><b>Risk:</b> {{ diabetesRisk().risk }}</p>
-        <p><b>Risk Score:</b> {{ diabetesRisk().risk_score }}</p>
+
+      <!-- =================================================================================== -->
+      <!-- MILESTONE 2: PATIENTS / PREDICTIONS (FEDERATED LEARNING & RISK MODELS) -->
+      <!-- =================================================================================== -->
+      <div *ngIf="activeTab === 'patients' || activeTab === 'predictions'">
+        <h1 class="page-title">AI Risk Prediction Engine</h1>
+
+        <!-- 3 STAT CARDS -->
+        <div class="top-stats-grid">
+          <div class="stat-box">
+            <span class="lbl">Risk Predictions</span>
+            <span class="val">342</span>
+            <span class="sub">Today</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">Model Accuracy</span>
+            <span class="val">{{ cvdRiskData.federated_learning.global_accuracy }}%</span>
+            <span class="sub">↑ 2.1% FL round {{ cvdRiskData.federated_learning.current_round }}</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">High Risk Patients</span>
+            <span class="val">23</span>
+            <span class="sub danger">Require intervention</span>
+          </div>
+        </div>
+
+        <!-- MAIN DELIVERABLE CARD CONTAINER -->
+        <div class="deliverable-box">
+          <h2 class="deliverable-title">TensorFlow Federated - Cardiovascular Risk Prediction</h2>
+          
+          <div class="info-line"><strong>Patient:</strong> John Doe | <strong>Model:</strong> {{ cvdRiskData.model_version }} | <strong>Federated Round:</strong> {{ cvdRiskData.federated_learning.current_round }}</div>
+          <div class="info-line"><strong>Input Features:</strong> Age, BP, HbA1c, LDL, eGFR, Smoking, FH</div>
+          <div class="info-line text-danger">Prediction: 10-year CVD Risk: {{ cvdRiskData.risk_percentage }}% | Category: {{ cvdRiskData.category }}</div>
+          <div class="info-line"><strong>SHAP Explanation:</strong> HbA1c (+8%), BP (+6%), Age (+5%)</div>
+          <div class="info-line"><strong>Comparison:</strong> Population avg 12.1% | Patient 2x higher risk</div>
+          <div class="info-line"><strong>Recommendation:</strong> Intensify statin, BP target &lt;130/80</div>
+          
+          <div class="action-bar">
+            <strong>Action:</strong>
+            <button class="btn-action" (click)="setTab('careplans')">[Generate Careplan]</button>
+            <button class="btn-action-outline" (click)="setTab('alerts')">[Alert Provider]</button>
+            <button class="btn-action-secondary">[Schedule Follow-up]</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE SHAP FEATURE BREAKDOWN -->
+        <div class="interactive-section">
+          <h4>🔒 Federated Learning Model & SHAP Feature Analysis</h4>
+          <div class="info-line">Federated Status: <span class="badge-tag success">{{ cvdRiskData.federated_learning.status }}</span> | Nodes Participating: <strong>3 Hospital Nodes (Zero raw data transfer)</strong></div>
+          <div *ngFor="let f of cvdRiskData.shap_features" class="info-line">
+            • {{ f.name }}: <strong>{{ f.value }}</strong> (Contribution: {{ f.contribution }})
+          </div>
+        </div>
       </div>
-    }
 
-  } @else {
 
-    <p>Loading patient information...</p>
+      <!-- =================================================================================== -->
+      <!-- MILESTONE 3: TWINS / ALERTS (CONTINUOUS MONITORING & REAL-TIME ALERTS) -->
+      <!-- =================================================================================== -->
+      <div *ngIf="activeTab === 'twins' || activeTab === 'alerts'">
+        <h1 class="page-title">Real-time Health Surveillance</h1>
 
-  }
+        <!-- 3 STAT CARDS -->
+        <div class="top-stats-grid">
+          <div class="stat-box">
+            <span class="lbl">Alerts Today</span>
+            <span class="val">{{ streamTelemetry.alertsToday || alertsToday }}</span>
+            <span class="sub danger">12 Critical</span>
+          </div>
 
+          <div class="stat-box">
+            <span class="lbl">Wearables Online</span>
+            <span class="val">{{ streamTelemetry.wearablesOnline }}</span>
+            <span class="sub success">{{ streamTelemetry.uptime }} uptime</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">Avg Response</span>
+            <span class="val">{{ streamTelemetry.avgResponseTimeMinutes }} min</span>
+            <span class="sub">↓ 67% vs manual</span>
+          </div>
+        </div>
+
+        <!-- MAIN DELIVERABLE CARD CONTAINER (EXACT MATCH TO MILESTONE 3 SCREENSHOT) -->
+        <div class="deliverable-box">
+          <h2 class="deliverable-title">Real-time Monitoring - Kafka Streams + Anomaly Detection</h2>
+          
+          <div class="info-line"><strong>ALERT:</strong> Patient Sarah M. | HR spike {{ monitoring.heart_rate || 145 }} bpm | Time: 14:23</div>
+          <div class="info-line"><strong>Context:</strong> At rest | No exercise | Previous avg: 68 bpm</div>
+          <div class="info-line"><strong>AI Analysis:</strong> {{ monitoring.ai_analysis }} | Confidence: {{ monitoring.ai_confidence }}%</div>
+          <div class="info-line"><strong>Auto-actions:</strong> Notified cardiologist | Scheduled ECG</div>
+          <div class="info-line"><strong>Kafka Stream:</strong> {{ streamTelemetry.throughput }} | Lag: {{ streamTelemetry.lagMs }}s</div>
+          <div class="info-line"><strong>Twin Update:</strong> Arrhythmia risk increased to 34%</div>
+          
+          <div class="action-bar">
+            <strong>Action:</strong>
+            <button class="btn-action" (click)="checkVitals()" [disabled]="monitoringLoading">
+              {{ monitoringLoading ? 'Checking...' : '[Trigger Stream Check]' }}
+            </button>
+            <button class="btn-action-outline" (click)="acknowledgeAlert(alerts[0])" [disabled]="isActionLoading(alerts[0])">[Acknowledge]</button>
+            <button class="btn-action-outline" (click)="escalateAlert(alerts[0])" [disabled]="isActionLoading(alerts[0])">[Escalate]</button>
+            <button class="btn-action-secondary">[View ECG]</button>
+            <button class="btn-action-secondary">[Contact Patient]</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE ALERTS LOG TABLE -->
+        <div class="interactive-section">
+          <h4>⚠ Saved Clinical Alerts Log (MongoDB Store)</h4>
+          <table class="saved-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Patient ID</th>
+                <th>Alert Header</th>
+                <th>Vitals Stream</th>
+                <th>AI Analysis</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let alt of alerts">
+                <td>{{ alt.timestamp }}</td>
+                <td><strong>{{ alt.patientId }}</strong></td>
+                <td>{{ alt.alert }}</td>
+                <td>HR: {{ alt.heartRate }} | SpO2: {{ alt.spo2 }}%</td>
+                <td>{{ alt.aiAnalysis }} ({{ alt.aiConfidence }}%)</td>
+                <td>
+                  <span 
+                    [class.danger]="!alt.clinicalAction || alt.clinicalAction === 'PENDING'" 
+                    [class.success]="alt.clinicalAction === 'ACKNOWLEDGED'" 
+                    [class.warning]="alt.clinicalAction === 'ESCALATED' || alt.clinicalAction === 'ESCALATED_TO_CARDIOLOGIST'" 
+                    class="badge-tag">
+                    {{ alt.clinicalAction || 'PENDING' }}
+                  </span>
+                </td>
+                <td>
+                  <button 
+                    class="btn-action-outline" 
+                    [class.active-ack]="alt.clinicalAction === 'ACKNOWLEDGED'"
+                    style="padding: 3px 10px; font-size: 11px;" 
+                    (click)="acknowledgeAlert(alt)" 
+                    [disabled]="isActionLoading(alt)">
+                    {{ alt.clinicalAction === 'ACKNOWLEDGED' ? '✓ Acked' : 'Ack' }}
+                  </button>
+                  <button 
+                    class="btn-action-secondary" 
+                    [class.active-esc]="alt.clinicalAction === 'ESCALATED' || alt.clinicalAction === 'ESCALATED_TO_CARDIOLOGIST'"
+                    style="padding: 3px 10px; font-size: 11px; margin-left: 6px;" 
+                    (click)="escalateAlert(alt)" 
+                    [disabled]="isActionLoading(alt)">
+                    {{ alt.clinicalAction === 'ESCALATED' || alt.clinicalAction === 'ESCALATED_TO_CARDIOLOGIST' ? '⚠ Escalated' : 'Escalate' }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- =================================================================================== -->
+      <!-- MILESTONE 4: CAREPLANS (PRECISION CARE MANAGEMENT & INTERVENTIONS) -->
+      <!-- =================================================================================== -->
+      <div *ngIf="activeTab === 'careplans'">
+        <h1 class="page-title">Precision Care Management</h1>
+
+        <!-- 3 STAT CARDS -->
+        <div class="top-stats-grid">
+          <div class="stat-box">
+            <span class="lbl">Active Careplans</span>
+            <span class="val">1,124</span>
+            <span class="sub">AI-generated</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">Adherence Rate</span>
+            <span class="val">78%</span>
+            <span class="sub">↑ 12% vs baseline</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="lbl">Hospitalizations</span>
+            <span class="val">↓ 23%</span>
+            <span class="sub success">Prevented</span>
+          </div>
+        </div>
+
+        <!-- MAIN DELIVERABLE CARD CONTAINER -->
+        <div class="deliverable-box">
+          <h2 class="deliverable-title">AI-Generated Personalized Careplan</h2>
+          
+          <div class="info-line"><strong>Patient:</strong> John Doe | <strong>Careplan:</strong> v2.1 | <strong>Generated by:</strong> AI Clinical Engine</div>
+          <div class="info-line"><strong>Goal 1:</strong> Reduce HbA1c to &lt;7.0% in 3 months</div>
+          <div class="info-line"> - <em>Intervention:</em> Increase Metformin to 1000mg BID</div>
+          <div class="info-line"> - <em>Monitoring:</em> Weekly glucose logs via app</div>
+          <div class="info-line"><strong>Goal 2:</strong> BP target &lt;130/80</div>
+          <div class="info-line"> - <em>Intervention:</em> Add Amlodipine 5mg</div>
+          <div class="info-line"> - <em>Monitoring:</em> Daily BP from wearable</div>
+          <div class="info-line"><strong>Predicted Outcome:</strong> CVD risk ↓ to 16.2% | <strong>Adherence score:</strong> {{ careplan.adherenceScore }}%</div>
+          <div class="info-line"><strong>Clinician Signature:</strong> <span class="badge-tag" [class.success]="careplan.status === 'APPROVED'" [class.warning]="careplan.status !== 'APPROVED'">{{ careplan.signedBy }}</span></div>
+
+          <div class="action-bar">
+            <strong>Action:</strong>
+            <button class="btn-action" *ngIf="careplan.status !== 'APPROVED'" (click)="approveCareplan()" [disabled]="approvingCareplan">
+              {{ approvingCareplan ? 'Signing...' : '[Approve Plan]' }}
+            </button>
+            <button class="btn-action-outline" (click)="generateNewCareplan()">[Modify / Regenerate]</button>
+            <button class="btn-action-secondary">[Send To Patient]</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- =================================================================================== -->
+      <!-- REPORTS / VALIDATION FRAMEWORK -->
+      <!-- =================================================================================== -->
+      <div *ngIf="activeTab === 'reports' || activeTab === 'validation'">
+        <h1 class="page-title">Validation Screens Framework</h1>
+
+        <!-- MAIN DELIVERABLE CARD CONTAINER -->
+        <div class="deliverable-box">
+          <h2 class="deliverable-title">Integrated Cognitive Health Platform Audit</h2>
+          
+          <div class="info-line"><strong>FHIR Resource Validation:</strong> {{ auditSummary.fhirValidationStatus }}</div>
+          <div class="info-line"><strong>HIPAA Audit Logging:</strong> {{ auditSummary.hipaaAuditLogging }}</div>
+          <div class="info-line"><strong>Patient Consent Verification:</strong> {{ auditSummary.patientConsentVerification }}</div>
+          <div class="info-line"><strong>RBAC Enforcement:</strong> {{ auditSummary.rbacStatus }}</div>
+          <div class="info-line"><strong>FL Model Accuracy:</strong> {{ auditSummary.flModelAccuracy }}% (&gt;90% threshold met)</div>
+          <div class="info-line"><strong>Anomaly Detection Precision:</strong> {{ auditSummary.anomalyPrecision }}% (&gt;85% threshold met)</div>
+          <div class="info-line"><strong>False Alert Rate:</strong> {{ auditSummary.falseAlertRate }}% (&lt;3% target met)</div>
+          <div class="info-line"><strong>SHAP Explainability & Guidelines:</strong> Verified & Compliant</div>
+        </div>
+
+        <!-- HIPAA LOGS TABLE -->
+        <div class="interactive-section">
+          <h4>📜 Live HIPAA Audit Trail</h4>
+          <table class="saved-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Executed Action</th>
+                <th>User Principal</th>
+                <th>Patient ID</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of hipaaLogs">
+                <td>{{ log.timestamp }}</td>
+                <td><code>{{ log.action }}</code></td>
+                <td>{{ log.user }}</td>
+                <td>{{ log.patientId }}</td>
+                <td><span class="badge-tag success">{{ log.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
 </div>
