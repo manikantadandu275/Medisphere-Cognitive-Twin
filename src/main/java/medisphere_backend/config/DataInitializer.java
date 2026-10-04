@@ -118,10 +118,28 @@ public class DataInitializer implements CommandLineRunner {
             plan.setId("CP-101-2026");
             plan.setPatientId("P101");
             plan.setPatientName("John Doe");
-            plan.setTitle("Precision Diabetes & CVD Careplan v2.1");
+            plan.setTitle("AI-Generated Personalized Careplan");
             plan.setVersion("v2.1");
-            plan.setGeneratedBy("MediSphere AI Clinical Guideline Engine");
-            plan.setTargetGoal("Reduce HbA1c to <7.0% in 3 months; Keep BP < 130/80 mmHg");
+            plan.setGeneratedBy("AI Clinical Guideline Engine");
+            plan.setTargetGoal("Reduce HbA1c to <7.0% in 3 months; BP target <130/80");
+            
+            plan.setGoals(List.of(
+                    java.util.Map.of(
+                            "goalId", "Goal 1",
+                            "description", "Reduce HbA1c to <7.0% in 3 months",
+                            "intervention", "Increase Metformin to 1000mg BID",
+                            "monitoring", "Weekly glucose logs via app",
+                            "guideline", "ADA Standards of Care 2026"
+                    ),
+                    java.util.Map.of(
+                            "goalId", "Goal 2",
+                            "description", "BP target <130/80",
+                            "intervention", "Add Amlodipine 5mg",
+                            "monitoring", "Daily BP from wearable",
+                            "guideline", "ACC/AHA 2024 Hypertension"
+                    )
+            ));
+
             plan.setInterventions(List.of(
                     "Increase Metformin to 1000mg BID",
                     "Add Amlodipine 5mg QD for blood pressure optimization",
@@ -129,15 +147,33 @@ public class DataInitializer implements CommandLineRunner {
                     "Low-sodium Mediterranean dietary program"
             ));
             plan.setMonitoringRules(List.of(
-                    "Kafka vitals streaming with real-time alert trigger on HR > 120 bpm",
-                    "Continuous SpO2 tracking during sleep",
-                    "Bi-weekly telehealth review"
+                    "Weekly glucose logs via app",
+                    "Daily BP from wearable",
+                    "Kafka vitals streaming with real-time alert trigger on HR > 120 bpm"
             ));
             plan.setBaselineRisk("24.3% 10-Year CVD Risk (High Risk)");
-            plan.setPredictedRisk("16.2% 10-Year CVD Risk (Reduced by 33.3%)");
-            plan.setAdherenceScore(87.4);
+            plan.setPredictedRisk("16.2% (CVD risk ↓ to 16.2%)");
+            plan.setAdherenceScore(87.0);
+            plan.setPopulationAdherence(78.0);
+            plan.setHospitalizationReduction("↓ 23% (Prevented)");
+            plan.setGuidelineCompliance("100% ADA & ACC/AHA Compliant");
+            plan.setSafetyStatus("PASSED - 0 Contraindications");
+
+            plan.setDrugInteractions(List.of(
+                    java.util.Map.of("pair", "Metformin + Amlodipine", "status", "PASSED (Safe Synergy)"),
+                    java.util.Map.of("pair", "Amlodipine + Lisinopril", "status", "PASSED (Synergistic Antihypertensive)")
+            ));
+
+            plan.setAdherenceBreakdown(java.util.Map.of(
+                    "medicationPdc", 84.5,
+                    "wearableSync", 88.0,
+                    "glucoseLogs", 76.5,
+                    "populationRate", 78.0
+            ));
+
             plan.setStatus("PENDING_APPROVAL");
-            plan.setSignedBy("Pending Clinician Electronic Signature");
+            plan.setSignedBy("Pending Provider Electronic Signature");
+            plan.setProviderNpi("1849204812");
             plan.setTimestamp(LocalDateTime.now());
             careplanRepository.save(plan);
         }

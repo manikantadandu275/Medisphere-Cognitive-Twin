@@ -11,4 +11,4 @@ global_average = (client1_average + client2_average) / 2
 
 print("Client 1 average:", client1_average)
 print("Client 2 average:", client2_average)
-print("Global average:", global_average)
+print("Global average:",global_average)

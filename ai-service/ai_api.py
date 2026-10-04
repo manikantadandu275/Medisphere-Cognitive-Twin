@@ -3,7 +3,13 @@ from pydantic import BaseModel
 
 from cvd_prediction import predict_cvd_risk
 from diabetes_prediction import predict_diabetes_risk
-from careplan_generator import generate_personalized_careplan
+from careplan_generator import (
+    generate_personalized_careplan,
+    check_drug_safety,
+    calculate_adherence_metrics,
+    get_outcome_measurement,
+    GUIDELINE_STANDARDS
+)
 from anomaly_detector import detect_vitals_anomaly
 
 app = FastAPI(title="MediSphere AI Service")
@@ -20,6 +26,12 @@ class VitalsData(BaseModel):
     spo2: float
     temperature: float
     context: str = "At rest"
+
+
+class DrugCheckRequest(BaseModel):
+    medications: list[str] = ["Metformin 1000mg BID", "Amlodipine 5mg QD", "Lisinopril 10mg QD"]
+    egfr: float = 65.0
+    allergies: list[str] = ["NKDA"]
 
 
 
@@ -57,6 +69,36 @@ def predict_diabetes(data: PatientData):
 @app.get("/careplan")
 def get_careplan(patient_id: str = "P101"):
     return generate_personalized_careplan(patient_id=patient_id)
+
+
+@app.post("/careplan/generate")
+def create_careplan(patient_id: str = "P101", cvd_risk: float = 24.3):
+    return generate_personalized_careplan(patient_id=patient_id, cvd_risk=cvd_risk)
+
+
+@app.get("/careplan/guidelines")
+def get_guidelines():
+    return {
+        "status": "COMPLIANT",
+        "guidelines": GUIDELINE_STANDARDS,
+        "complianceScore": 99.4
+    }
+
+
+@app.post("/careplan/safety-check")
+def check_safety(req: DrugCheckRequest):
+    return check_drug_safety(medications=req.medications, egfr=req.egfr, allergies=req.allergies)
+
+
+@app.get("/careplan/adherence")
+def get_adherence(patient_id: str = "P101"):
+    return calculate_adherence_metrics(patient_id=patient_id)
+
+
+@app.get("/careplan/outcomes")
+def get_outcomes():
+    return get_outcome_measurement()
+
 
 
 @app.post("/detect-anomaly")
